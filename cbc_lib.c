@@ -43,5 +43,3 @@ int encode(const char * destpath) {
 int decode(const char * sourcepath) {
     return 1;
 }
-
-
