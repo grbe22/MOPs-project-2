@@ -52,6 +52,17 @@ block64 b_c_e(block64 block, block64 key) {
     return block;
 }
 
+/// mirrors the implementation of b_c_e.
+/// xor can be undone by recalling xor on the same bits, then it's shifted right.
+/// repeat four times to match b_c_d.
+block64 b_c_d(block64 block, block64 key) {
+    for (int i = 0; i < 4; i++) {
+        block = block ^ key;
+        block = roll_right(block, 10);
+    }
+    return block;
+}
+
 int encode(const char * destpath) {
     return 1;
 }
