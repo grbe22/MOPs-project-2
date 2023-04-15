@@ -1,0 +1,59 @@
+commit 6158e1e82017cf4eec97dc442282a7298cc642fe
+Author: Gabriel W Rippel <gwr3294@cs.rit.edu>
+Date:   Sat Apr 15 10:02:53 2023 -0400
+
+    implemented theoretical implementation of cbc_encrypt & encode.
+
+commit f2685047502bb54645739bde0dd80945364dae81
+Author: Gabriel W Rippel <gwr3294@cs.rit.edu>
+Date:   Sat Apr 15 09:47:03 2023 -0400
+
+    added experimental implementation of decryption, experimenting with union to convert b64 to string instead of to_string method.
+
+commit ad8bacc5d836186ca94d3e490ea24da9675c8f65
+Author: Gabriel W Rippel <gwr3294@cs.rit.edu>
+Date:   Sat Apr 15 09:23:16 2023 -0400
+
+    updated function names to match documentation.
+
+commit e5894adad0ef3b071dd3683b6b5d0990c4e5fd6e
+Author: Gabriel W Rippel <gwr3294@cs.rit.edu>
+Date:   Thu Apr 13 09:26:37 2023 -0400
+
+    implemented decryption function
+
+commit 1e516de494bbbea05ee2752ea1528bd71a38a44e
+Author: Gabriel W Rippel <gwr3294@cs.rit.edu>
+Date:   Thu Apr 13 08:45:18 2023 -0400
+
+    cleaned up functions in cbc_lib, implemented basic encryption function.
+
+commit c43b760312d9e88c07df0ab33efdcad4f73bc776
+Author: Gabriel W Rippel <gwr3294@cs.rit.edu>
+Date:   Tue Apr 11 11:03:38 2023 -0400
+
+    implemented decode.c main to handle the same way as encode.c
+
+commit 2c54b8d8690f5fa36d5bc756a99db43752bece20
+Author: Gabriel W Rippel <gwr3294@cs.rit.edu>
+Date:   Tue Apr 11 10:57:31 2023 -0400
+
+    updated basic encode file to allow for proper handling with encode function.
+
+commit 3fe090e4a0e3e65ddd824a83f1a23f8c227f8ad4
+Author: Gabriel W Rippel <gwr3294@cs.rit.edu>
+Date:   Tue Apr 11 10:52:52 2023 -0400
+
+    initializated project & started main function.
+
+commit e66db8af09fde5c22913d51d17c1b2ff56baa1f1
+Author: Gabriel W Rippel <gwr3294@cs.rit.edu>
+Date:   Mon Apr 3 08:00:53 2023 -0400
+
+    implemented theoretical use of barrel rolls, convert blocks to strings.
+
+commit 986a0a9a552574e61881d9cff9372f4c3cb6ba0d
+Author: Gabriel W Rippel <gwr3294@cs.rit.edu>
+Date:   Sun Apr 2 18:50:34 2023 -0400
+
+    yeah im just getting started what of it

@@ -15,15 +15,15 @@
 /// @param argv: string list of commands passed through command line.
 int main (int argc, char * argv[]) {
     if (argc == 1) {
-        fprintf(stderr, "usage: encode to-file-name from standard input.\n");
+        fprintf(stderr, "usage: encode to-file-name\t# from standard input.\n");
         return EXIT_FAILURE;
     }
     // if encode returns a 0, as in it successfully encodes, returns success. else, returns failure.
     if (encode(argv[1]) == 0) {
-        fprintf(stderr, "set.\n");
+        fprintf(stderr, "ok\n");
         return EXIT_SUCCESS;
     } else {
-        fprintf(stderr, "encode failed.\n");
+        fprintf(stderr, "FAILED\n");
         return EXIT_FAILURE;
     }
 }

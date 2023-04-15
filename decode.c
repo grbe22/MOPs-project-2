@@ -16,15 +16,15 @@
 /// returns EXIT_SUCCESS if successful, EXIT_FAILURE if failed.
 int main(int argc, char * argv[]) {
     if (argc == 1) {
-        fprintf(stderr, "usage: decode file-name to standard input\n");
+        fprintf(stderr, "usage: decode file-name\t# to standard input\n");
         return EXIT_FAILURE;
     }
     // same as in encode.
     if (decode(argv[1]) == 0) {
-        fprintf(stderr, "success\n");
+        fprintf(stderr, "ok\n");
         return EXIT_SUCCESS;
     } else {
-        fprintf(stderr, "decode failed\n");
+        fprintf(stderr, "FAILED\n");
         return EXIT_FAILURE;
     }
 }

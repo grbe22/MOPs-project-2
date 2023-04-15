@@ -1,33 +1,33 @@
 
 Assignment Feedback
 
-My name is:
-My login ID is:
+My name is: Gabe Rippel
+My login ID is: gwr3294
 
-Assignment name is:
+Assignment name is: Project 2
 
 
 What did I learn?
-
+implementation of encryption, understanding how encryption can not be undone without the key, passing references and values, scrubbing allocated memory.
 
 
 
 What was easy/fun about this assignment?
-
+this was such a hard assignment. understanding the idea was simple enough, but passing values and input gave me so much trouble.
 
 
 
 What gave you problems/troubles?
-
+handling data input and converting to blocks.
 
 
 
 What could the instructor do to improve this assignment?
-
+I think generally my gripe is with how hard it is to handle data. The project would be very simple if it were just a matter of taking unencrypted information and just... encrypting it / decrypting ciphertext.
 
 
 
 What would you have liked to do in this assignment?
-
+it'd be nice to have more control over encryption and decryption methods - like, so long as the program can encrypt & decrypt its own information the project is valid. Would've been fun just not really feasible.
 
 

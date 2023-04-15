@@ -12,23 +12,25 @@
 
 #define BITS_IN_BLOCK (sizeof(long) * 8)
 #define INPUT_SIZE (sizeof(long) * 24)
+#define BYTES_PER_BLOCK (sizeof(long))
 
 static block64 key = 0x1234DeadBeefCafe; // each hex digit is 4 bits
 static const block64 INITIALIZATION_VECTOR = 0x0L; // initial IV value
 
-union block64_string {
+union Block64_string {
     char string[sizeof(long)];
     block64 block;
-}
+};
 
 /// converts a byte64 element into a string.
 /// string: an array of string that should be undefined.
 /// text: the block64 being converted to a string.
-///void b64_string(char * string, block64 text) {
+void block64_to_string(block64 text, char * string) {
+    
     /// clears data. this way, terminated strings will have empty bytes after termination byte.
-    ///memset(string, '\0', sizeof(long) + 1);
-    ///strcopy(string, (char *) &txt, sizeof(long));
-///}
+    memset(string, '\0', sizeof(long) + 1);
+    strncpy(string, (char *) &text, sizeof(long));
+}
 
 /// performs a bit barrel roll right to left by count bits.
 /// @param block the block64 subjected to roll.
@@ -68,35 +70,32 @@ block64 block_cipher_decrypt(block64 block, block64 key) {
     return block;
 }
 
-int encode(const char * destpath) {
-    return 1;
-}
-
-b64_string * cbc_decrypt(block64 * cipher, int count, block64 key, block64 * vector) {
-    b64_string * text = (char *) malloc(count + 1);
+char * cbc_decrypt(block64 * cipher, int count, block64 * vector, block64 key) {
+    union Block64_string * text;
+    text = malloc(count + 1);
     // scrubs any data stored in text.
     memset(text, '\0', count + 1);
     for (int i = 0; i < count; i ++) {
-        text.block = block_cipher_decrypt(cipher[i], key) ^ vector;
-        vector = cipher[i]
+        text -> block = block_cipher_decrypt(cipher[i], key) ^ *vector;
+        *vector = cipher[i];
     }
-    return(text);
+    return(text -> string);
 }
 
 int decode(const char * sourcepath) {
     FILE * file;
-    if ((fp = fopen(sourcepath, "rb")) == NULL) {
+    if ((file = fopen(sourcepath, "rb")) == NULL) {
         return EXIT_FAILURE;
     }
 
     block64 * block;
     block = (block64 *) malloc(sizeof(block64));
     block64 vector = INITIALIZATION_VECTOR;
-    int c = 0;
+    int count = 0;
 
-    while (c = fread(block, sizeof(block64), file)) {
-        b64_string * decryption = cbc_decrypt(&block[0], count, key, vector);
-        printf("%s", decryption.string);
+    while ((count = fread(block, 1, sizeof(block64), file))) {
+        char * decryption = cbc_decrypt(&block[0], count, &vector, key);
+        printf("%s", decryption);
         free(decryption);
     }
 
@@ -107,17 +106,18 @@ int decode(const char * sourcepath) {
 
 
 
-block64 * cbc_encrypt(char * text, int count, block64 key, block64 * vector) {
+block64 * cbc_encrypt(char * text, block64 * vector, block64 key) {
     // add sizeof(long) to handle escape characters.
+    int count = sizeof(long);
     block64 * piece = (block64 *) malloc(count + sizeof(long));
     for (int i = 0; i < count; i ++) {
         // instantiates a buffer with null character filling.
         char buffer [sizeof(long) + 1] = {"\0"};
-        strncopy(buffer, text + (i * sizeof(long)), sizeof(long));
-        block64 block = (block64 *) buffer;
+        strncpy(buffer, text + (i * sizeof(long)), sizeof(long));
+        block64 * block = (block64 *) buffer;
         piece[i] = * block ^ * vector;
-        * vector = block_cipher_encrypt(chunk[i], key);
-        chunk[i] = * vector;
+        * vector = block_cipher_encrypt(piece[i], key);
+        piece[i] = * vector;
     }
     return(piece);
 }
@@ -131,13 +131,12 @@ int encode (const char * destpath) {
     if ((file = fopen(destpath, "wb")) == NULL) {
         return EXIT_FAILURE;
     }
-    char * text[INPUT_SIZE];
-    text = (char *) malloc(INPUT_SIZE, 1);
+    char * text;
+    text = (char *) malloc(INPUT_SIZE);
     block64 vector = INITIALIZATION_VECTOR;
     while (fgets(text, INPUT_SIZE, stdin) != NULL) {
-        int count = sizeof(text) + 1;
-        block64 block = cbc_encrypt(text, count, key, &vector);
-        fwrite(block, BYTES_PER_BLOCK, strlen(text) + 1, file);
+        block64 * block = cbc_encrypt(text, &vector, key);
+        fwrite(block, sizeof(long), strlen(text) + 1, file);
         free(block);
     }
     free(text);
