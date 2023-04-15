@@ -16,7 +16,7 @@
 /// returns EXIT_SUCCESS if successful, EXIT_FAILURE if failed.
 int main(int argc, char * argv[]) {
     if (argc == 1) {
-        fprintf(stderr, "usage: decode file-name\t# to standard input\n");
+        fprintf(stderr, "usage: decode file-name  # to standard input\n\n");
         return EXIT_FAILURE;
     }
     // same as in encode.
