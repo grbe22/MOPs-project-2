@@ -44,7 +44,7 @@ block64 roll_left(block64 block, size_t count) {
 /// converts plaintext blocks to encrypted blocks.
 /// repeated four times, block is shifted 10 to the left then xor'ed with key.
 /// this ensures an unreadable value unless you have the key value.
-block64 b_c_e(block64 block, block64 key) {
+block64 block_cipher_encrypt(block64 block, block64 key) {
     for (int i = 0; i < 4; i++) {
         block = roll_left(block, 10);
         block = block ^ key;
@@ -55,7 +55,7 @@ block64 b_c_e(block64 block, block64 key) {
 /// mirrors the implementation of b_c_e.
 /// xor can be undone by recalling xor on the same bits, then it's shifted right.
 /// repeat four times to match b_c_d.
-block64 b_c_d(block64 block, block64 key) {
+block64 block_cipher_decrypt(block64 block, block64 key) {
     for (int i = 0; i < 4; i++) {
         block = block ^ key;
         block = roll_right(block, 10);
