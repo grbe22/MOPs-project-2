@@ -104,3 +104,43 @@ int decode(const char * sourcepath) {
     fclose(file);
     return EXIT_SUCCESS;
 }
+
+
+
+block64 * cbc_encrypt(char * text, int count, block64 key, block64 * vector) {
+    // add sizeof(long) to handle escape characters.
+    block64 * piece = (block64 *) malloc(count + sizeof(long));
+    for (int i = 0; i < count; i ++) {
+        // instantiates a buffer with null character filling.
+        char buffer [sizeof(long) + 1] = {"\0"};
+        strncopy(buffer, text + (i * sizeof(long)), sizeof(long));
+        block64 block = (block64 *) buffer;
+        piece[i] = * block ^ * vector;
+        * vector = block_cipher_encrypt(chunk[i], key);
+        chunk[i] = * vector;
+    }
+    return(piece);
+}
+
+
+
+
+
+int encode (const char * destpath) {
+    FILE * file;
+    if ((file = fopen(destpath, "wb")) == NULL) {
+        return EXIT_FAILURE;
+    }
+    char * text[INPUT_SIZE];
+    text = (char *) malloc(INPUT_SIZE, 1);
+    block64 vector = INITIALIZATION_VECTOR;
+    while (fgets(text, INPUT_SIZE, stdin) != NULL) {
+        int count = sizeof(text) + 1;
+        block64 block = cbc_encrypt(text, count, key, &vector);
+        fwrite(block, BYTES_PER_BLOCK, strlen(text) + 1, file);
+        free(block);
+    }
+    free(text);
+    fclose(file);
+    return EXIT_SUCCESS;
+}
