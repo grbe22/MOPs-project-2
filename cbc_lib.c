@@ -70,11 +70,14 @@ block64 block_cipher_decrypt(block64 block, block64 key) {
     return block;
 }
 
+
+/// handles input and passes it to b_c_d. returns information as a string.
+/// accepts cipher, the current block, count, the length of the block, vector, where it's stored, and key, the encryption key.
 char * cbc_decrypt(block64 * cipher, int count, block64 * vector, block64 key) {
     union Block64_string * text;
-    text = malloc(count + 1);
+    text = malloc((count * sizeof(long)) + 1);
     // scrubs any data stored in text.
-    memset(text, '\0', count + 1);
+    memset(text, '\0', count * sizeof(long) + 1);
     for (int i = 0; i < count; i ++) {
         text -> block = block_cipher_decrypt(cipher[i], key) ^ *vector;
         *vector = cipher[i];
@@ -82,6 +85,10 @@ char * cbc_decrypt(block64 * cipher, int count, block64 * vector, block64 key) {
     return(text -> string);
 }
 
+
+/// takes the source file location of the encrypted text and processes it for cbc_decrypt.
+/// passes the information in manageable chunks to cbc_decrypt.
+/// returns failure if the file isn't found, success if it is. found.
 int decode(const char * sourcepath) {
     FILE * file;
     if ((file = fopen(sourcepath, "rb")) == NULL) {
@@ -93,7 +100,7 @@ int decode(const char * sourcepath) {
     block64 vector = INITIALIZATION_VECTOR;
     int count = 0;
 
-    while ((count = fread(block, 1, sizeof(block64), file))) {
+    while ((count = fread(block, 1, sizeof(block64), file)/sizeof(block64))) {
         char * decryption = cbc_decrypt(&block[0], count, &vector, key);
         printf("%s", decryption);
         free(decryption);
@@ -105,11 +112,14 @@ int decode(const char * sourcepath) {
 }
 
 
-
+/// takes the text input from encode, the vector, and the key, and encrypts it.
+/// text: the text provided by encode
+/// vector: the vector location of the program.
+/// key: the encryption key that encrypt uses.
 block64 * cbc_encrypt(char * text, block64 * vector, block64 key) {
     // add sizeof(long) to handle escape characters.
-    int count = sizeof(long);
-    block64 * piece = (block64 *) malloc(count + sizeof(long));
+    int count = 1+strlen(text)/sizeof(long);
+    block64 * piece = (block64 *) malloc(count * sizeof(long));
     for (int i = 0; i < count; i ++) {
         // instantiates a buffer with null character filling.
         char buffer [sizeof(long) + 1] = {"\0"};
@@ -123,9 +133,9 @@ block64 * cbc_encrypt(char * text, block64 * vector, block64 key) {
 }
 
 
-
-
-
+/// takes the string for the destination, user input, then packages & processes the information for cbc_encrypt.
+/// takes a file destination as a parameter.
+/// returns exit success if it successfully encrypts, exit failure if the file isn't found.
 int encode (const char * destpath) {
     FILE * file;
     if ((file = fopen(destpath, "wb")) == NULL) {
@@ -136,7 +146,7 @@ int encode (const char * destpath) {
     block64 vector = INITIALIZATION_VECTOR;
     while (fgets(text, INPUT_SIZE, stdin) != NULL) {
         block64 * block = cbc_encrypt(text, &vector, key);
-        fwrite(block, sizeof(long), strlen(text) + 1, file);
+        fwrite(block, sizeof(long), 1+strlen(text)/8, file);
         free(block);
     }
     free(text);
